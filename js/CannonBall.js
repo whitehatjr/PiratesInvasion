@@ -51,7 +51,7 @@ class CannonBall {
     translate(pos.x, pos.y);
     rotate(angle);
     imageMode(CENTER);
-    image(this.animation[index], 0, 0, this.r, this.r);
+    image(this.animation[index], 0, 0 + 4, this.r, this.r);
     pop();
 
     if (this.body.velocity.x > 0 && this.body.position.x > 10 && !this.isSink) {
