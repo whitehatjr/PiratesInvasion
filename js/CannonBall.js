@@ -30,12 +30,12 @@ class CannonBall {
     this.r = 150;
     setTimeout(() => {
       Matter.World.remove(world, this.body);
-      balls.splice(index, 1);
+      delete balls[index];
     }, 1000);
   }
 
   shoot() {
-    var newAngle = cannon.angle - 0.5
+    var newAngle = cannon.angle - 0.5;
     var velocity = p5.Vector.fromAngle(newAngle);
     velocity.mult(20);
     Matter.Body.setStatic(this.body, false);
@@ -54,11 +54,7 @@ class CannonBall {
     image(this.animation[index], 0, 0, this.r, this.r);
     pop();
 
-    if (
-      this.body.velocity.x > 0 &&
-      this.body.position.x > 10 &&
-      !this.isSink
-    ) {
+    if (this.body.velocity.x > 0 && this.body.position.x > 10 && !this.isSink) {
       var position = [this.body.position.x, this.body.position.y];
       this.trajectory.push(position);
     }

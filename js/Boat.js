@@ -29,7 +29,8 @@ class Boat {
     this.isBroken = true;
     setTimeout(() => {
       Matter.World.remove(world, boats[index].body);
-      boats.splice(index, 1);
+      // boats.splice(index, 1);
+      delete boats[index];
     }, 2000);
   }
 

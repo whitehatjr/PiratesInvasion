@@ -23,8 +23,7 @@ var waterSplashAnimation = [];
 var waterSplashSpritedata, waterSplashSpritesheet;
 
 var isGameOver = false;
-var isLaughing = false
-
+var isLaughing = false;
 
 function preload() {
   backgroundImg = loadImage("./assets/background.gif");
@@ -99,7 +98,8 @@ function draw() {
           }
 
           Matter.World.remove(world, balls[i].body);
-          balls.splice(i, 1);
+          // balls.splice(i, 1);
+          delete balls[i];
           i--;
         }
       }
@@ -125,12 +125,14 @@ function keyPressed() {
 }
 
 function showCannonBalls(ball, index) {
-  ball.display();
-  ball.animate();
-  if (ball.body.position.x >= width || ball.body.position.y >= height - 50) {
-    if (!ball.isSink) {
-      waterSound.play();
-      ball.remove(index);
+  if (ball) {
+    ball.display();
+    ball.animate();
+    if (ball.body.position.x >= width || ball.body.position.y >= height - 50) {
+      if (!ball.isSink) {
+        waterSound.play();
+        ball.remove(index);
+      }
     }
   }
 }
@@ -138,7 +140,7 @@ function showCannonBalls(ball, index) {
 function showBoats() {
   if (boats.length > 0) {
     if (
-      boats.length < 4 &&
+      boats[boats.length - 1] === undefined ||
       boats[boats.length - 1].body.position.x < width - 300
     ) {
       var positions = [-40, -60, -70, -20];
@@ -156,23 +158,27 @@ function showBoats() {
     }
 
     for (var i = 0; i < boats.length; i++) {
-      Matter.Body.setVelocity(boats[i].body, {
-        x: -0.9,
-        y: 0
-      });
+      if (boats[i]) {
+        Matter.Body.setVelocity(boats[i].body, {
+          x: -0.9,
+          y: 0
+        });
 
-      boats[i].display();
-      boats[i].animate();
-      var collision = Matter.SAT.collides(tower.body, boats[i].body);
-      if (collision.collided && !boats[i].isBroken) {
-        //Added isLaughing flag and setting isLaughing to true
-        if(!isLaughing && !pirateLaughSound.isPlaying()){
-          pirateLaughSound.play();
-          isLaughing = true
+        boats[i].display();
+        boats[i].animate();
+        var collision = Matter.SAT.collides(tower.body, boats[i].body);
+        if (collision.collided && !boats[i].isBroken) {
+          //Added isLaughing flag and setting isLaughing to true
+          if (!isLaughing && !pirateLaughSound.isPlaying()) {
+            pirateLaughSound.play();
+            isLaughing = true;
+          }
+
+          isGameOver = true;
+          gameOver();
         }
-
-        isGameOver = true;
-        gameOver();
+      } else {
+        boats[i];
       }
     }
   } else {
